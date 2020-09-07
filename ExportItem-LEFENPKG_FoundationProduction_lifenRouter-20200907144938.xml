@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="IRIS" version="26">
+<Project name="EnsExportItem_2020-09-07 14-49-37_991+0" LastModified="2020-09-07 14:50:07.288592">
+  <ProjectDescription>Studio Project generated starting from Production Configuration Item 'LEFENPKG.FoundationProduction : lifen_Router' at 2020-09-07 14:49:37.991 UTC</ProjectDescription>
+  <Items>
+    <ProjectItem name="LEFENPKG.TestCustomLifen" type="CLS"></ProjectItem>
+    <ProjectItem name="LEFENPKG.lifenRoutingRule" type="CLS"></ProjectItem>
+    <ProjectItem name="Lifen2.5.HL7" type="HL7"></ProjectItem>
+    <ProjectItem name="Settings:Identity.PTD" type="PTD"></ProjectItem>
+    <ProjectItem name="Settings:Lifen.IN.PTD" type="PTD"></ProjectItem>
+    <ProjectItem name="Settings:Sejour.PTD" type="PTD"></ProjectItem>
+    <ProjectItem name="Settings:lifen.PTD" type="PTD"></ProjectItem>
+    <ProjectItem name="Settings:lifen_Router.PTD" type="PTD"></ProjectItem>
+    <ProjectItem name="EnsExportNotes.EnsExportItem_2020-09-07 14-49-37_991+0.PTD" type="PTD"></ProjectItem>
+  </Items>
+</Project>
+
+
+<Class name="LEFENPKG.TestCustomLifen">
+<Super>Ens.DataTransformDTL</Super>
+<TimeCreated>65624,57906.354852</TimeCreated>
+<DependsOn>EnsLib.HL7.Message</DependsOn>
+
+<Parameter name="IGNOREMISSINGSOURCE">
+<Default>1</Default>
+</Parameter>
+
+<Parameter name="REPORTERRORS">
+<Default>1</Default>
+</Parameter>
+
+<Parameter name="TREATEMPTYREPEATINGFIELDASNULL">
+<Default>0</Default>
+</Parameter>
+
+<XData name="DTL">
+<XMLNamespace>http://www.intersystems.com/dtl</XMLNamespace>
+<Data><![CDATA[
+<transform sourceClass='EnsLib.HL7.Message' targetClass='EnsLib.HL7.Message' sourceDocType='Lifen2.5:Custom_ADT_A01' targetDocType='Lifen2.5:Custom_ADT_A01' create='new' language='objectscript' >
+<assign value='source' property='target' action='set' />
+</transform>
+]]></Data>
+</XData>
+</Class>
+
+
+<Class name="LEFENPKG.lifenRoutingRule">
+<Description>
+</Description>
+<Super>Ens.Rule.Definition</Super>
+<TimeCreated>65616,49591.372913</TimeCreated>
+
+<Parameter name="RuleAssistClass">
+<Default>EnsLib.HL7.MsgRouter.RuleAssist</Default>
+</Parameter>
+
+<XData name="RuleDefinition">
+<XMLNamespace>http://www.intersystems.com/rule</XMLNamespace>
+<Data><![CDATA[
+<ruleDefinition alias="" context="EnsLib.HL7.MsgRouter.RoutingEngine" production="LEFENPKG.FoundationProduction">
+<ruleSet name="" effectiveBegin="" effectiveEnd="">
+<rule name="" disabled="false">
+<constraint name="source" value="Lifen.IN"></constraint>
+<when condition="(DocName Contains &quot;A28&quot;)||(DocName Contains &quot;A31&quot;)||(DocName Contains &quot;A40&quot;)">
+<send transform="LEFENPKG.TestCustomLifen" target="Identity"></send>
+<return></return>
+</when>
+<otherwise>
+<send transform="LEFENPKG.TestCustomLifen" target="Sejour"></send>
+<return></return>
+</otherwise>
+</rule>
+</ruleSet>
+</ruleDefinition>
+]]></Data>
+</XData>
+</Class>
+
+
+<Document name="EnsExportNotes.EnsExportItem_2020-09-07 14-49-37_991+0.PTD"><ProjectTextDocument name="EnsExportNotes.EnsExportItem_2020-09-07 14-49-37_991+0" description="Export Notes for export EnsExportItem_2020-09-07 14-49-37_991+0">
+<![CDATA[<Deployment>
+<Creation>
+<Machine>IRISDEV01.BRC35RDCW0WETDHB0F3U3PXPVB.PARX.INTERNAL.CLOUDAPP.NET</Machine>
+<Instance>IRISDEV01</Instance>
+<Namespace>LIFEN</Namespace>
+<SourceProduction>LEFENPKG.FoundationProduction</SourceProduction>
+<Username>sghanmi</Username>
+<UTC>2020-09-07 14:50:07.285</UTC>
+</Creation>
+<Notes>
+</Notes>
+<Contents>
+<ExportProject>EnsExportItem_2020-09-07 14-49-37_991+0</ExportProject>
+<Item num="1">LEFENPKG.TestCustomLifen.CLS</Item>
+<Item num="2">LEFENPKG.lifenRoutingRule.CLS</Item>
+<Item num="3">Lifen2.5.HL7</Item>
+<Item num="4">Settings:Identity.PTD</Item>
+<Item num="5">Settings:Lifen.IN.PTD</Item>
+<Item num="6">Settings:Sejour.PTD</Item>
+<Item num="7">Settings:lifen.PTD</Item>
+<Item num="8">Settings:lifen_Router.PTD</Item>
+</Contents>
+<ProductionClassInExport></ProductionClassInExport>
+</Deployment>
+
+]]></ProjectTextDocument>
+</Document>
+
+<Document name="Lifen2.5.HL7">
+<Category name="Lifen2.5" base="2.5">
+
+<MessageType name='ADT_A01' structure='Custom_ADT_A01' returntype='base:ACK_A01' description='ADT message - Admit/visit notification'/>
+<MessageType name='IN1' structure='Custom_IN1' returntype='base:ACK_A01' description='IN1 message '/>
+<MessageType name='ZFD' structure='Custom_ZFD' returntype='base:ACK_A01' description='ZFD message - Complément démographique'/>
+<MessageType name='ZFM' structure='Custom_ZFM' returntype='base:ACK_A01' description='ZFM message - Mouvement PMSI
+'/>
+<MessageType name='ZW1' structure='Custom_ZW1' returntype='base:ACK_A01' description='ZW1 message '/>
+<MessageType name='ZW2' structure='Custom_ZW2' returntype='base:ACK_A01' description='ZW2 message '/>
+<MessageType name='ZW6' structure='Custom_ZW6' returntype='base:ACK_A01' description='ZW6 message '/>
+
+<MessageStructure name='Custom_ADT_A01' definition='base:MSH~[~{~base:SFT~}~]~base:EVN~base:PID~[~base:PD1~]~[~{~base:ROL~}~]~[~{~base:NK1~}~]~base:PV1~[~base:PV2~]~[~{~base:ROL~}~]~[~{~base:DB1~}~]~[~{~base:OBX~}~]~[~{~base:AL1~}~]~[~{~base:DG1~}~]~[~base:DRG~]~[~{~base:PR1~[~{~base:ROL~}~]~}~]~[~{~base:GT1~}~]~[~{~IN1~[~base:IN2~]~[~{~base:IN3~}~]~[~{~base:ROL~}~]~}~]~[~base:ACC~]~[~base:UB1~]~[~base:UB2~]~[~base:PDA~]~[~ZBE~]~[~ZFM~]~[~ZFD~]~[~IN1~]~[~ZW1~]~[~ZW2~]~[~ZW6~]'/>
+<MessageStructure name='Custom_IN1' definition='base:MSH~[~{~base:SFT~}~]~base:EVN~base:PID~[~base:PD1~]~[~{~base:ROL~}~]~[~{~base:NK1~}~]~base:PV1~[~base:PV2~]~[~{~base:ROL~}~]~[~{~base:DB1~}~]~[~{~base:OBX~}~]~[~{~base:AL1~}~]~[~{~base:DG1~}~]~[~base:DRG~]~[~{~base:PR1~[~{~base:ROL~}~]~}~]~[~{~base:GT1~}~]~[~{~IN1~[~base:IN2~]~[~{~base:IN3~}~]~[~{~base:ROL~}~]~}~]~[~base:ACC~]~[~base:UB1~]~[~base:UB2~]~[~base:PDA~]~[~ZBE~]~[~ZFM~]~[~ZFD~]~[~IN1~]~[~ZW1~]~[~ZW2~]~[~ZW6~]'/>
+<MessageStructure name='Custom_ZFD' definition='base:MSH~[~{~base:SFT~}~]~base:EVN~base:PID~[~base:PD1~]~[~{~base:ROL~}~]~[~{~base:NK1~}~]~base:PV1~[~base:PV2~]~[~{~base:ROL~}~]~[~{~base:DB1~}~]~[~{~base:OBX~}~]~[~{~base:AL1~}~]~[~{~base:DG1~}~]~[~base:DRG~]~[~{~base:PR1~[~{~base:ROL~}~]~}~]~[~{~base:GT1~}~]~[~{~base:IN1~[~base:IN2~]~[~{~base:IN3~}~]~[~{~base:ROL~}~]~}~]~[~base:ACC~]~[~base:UB1~]~[~base:UB2~]~[~base:PDA~]~[~ZBE~]~[~ZFM~]~[~ZFD~]'/>
+<MessageStructure name='Custom_ZFM' definition='base:MSH~[~{~base:SFT~}~]~base:EVN~base:PID~[~base:PD1~]~[~{~base:ROL~}~]~[~{~base:NK1~}~]~base:PV1~[~base:PV2~]~[~{~base:ROL~}~]~[~{~base:DB1~}~]~[~{~base:OBX~}~]~[~{~base:AL1~}~]~[~{~base:DG1~}~]~[~base:DRG~]~[~{~base:PR1~[~{~base:ROL~}~]~}~]~[~{~base:GT1~}~]~[~{~base:IN1~[~base:IN2~]~[~{~base:IN3~}~]~[~{~base:ROL~}~]~}~]~[~base:ACC~]~[~base:UB1~]~[~base:UB2~]~[~base:PDA~]~[~ZBE~]~[~ZFM~]'/>
+<MessageStructure name='Custom_ZW1' definition='base:MSH~[~{~base:SFT~}~]~base:EVN~base:PID~[~base:PD1~]~[~{~base:ROL~}~]~[~{~base:NK1~}~]~base:PV1~[~base:PV2~]~[~{~base:ROL~}~]~[~{~base:DB1~}~]~[~{~base:OBX~}~]~[~{~base:AL1~}~]~[~{~base:DG1~}~]~[~base:DRG~]~[~{~base:PR1~[~{~base:ROL~}~]~}~]~[~{~base:GT1~}~]~[~{~base:IN1~[~base:IN2~]~[~{~base:IN3~}~]~[~{~base:ROL~}~]~}~]~[~base:ACC~]~[~base:UB1~]~[~base:UB2~]~[~base:PDA~]~[~ZBE~]~[~ZFM~]~[~ZFD~]~[~ZW1~]'/>
+<MessageStructure name='Custom_ZW2' definition='base:MSH~[~{~base:SFT~}~]~base:EVN~base:PID~[~base:PD1~]~[~{~base:ROL~}~]~[~{~base:NK1~}~]~base:PV1~[~base:PV2~]~[~{~base:ROL~}~]~[~{~base:DB1~}~]~[~{~base:OBX~}~]~[~{~base:AL1~}~]~[~{~base:DG1~}~]~[~base:DRG~]~[~{~base:PR1~[~{~base:ROL~}~]~}~]~[~{~base:GT1~}~]~[~{~base:IN1~[~base:IN2~]~[~{~base:IN3~}~]~[~{~base:ROL~}~]~}~]~[~base:ACC~]~[~base:UB1~]~[~base:UB2~]~[~base:PDA~]~[~ZBE~]~[~ZFM~]~[~ZFD~]~[~ZW1~]~[~ZW2~]'/>
+<MessageStructure name='Custom_ZW6' definition='base:MSH~[~{~base:SFT~}~]~base:EVN~base:PID~[~base:PD1~]~[~{~base:ROL~}~]~[~{~base:NK1~}~]~base:PV1~[~base:PV2~]~[~{~base:ROL~}~]~[~{~base:DB1~}~]~[~{~base:OBX~}~]~[~{~base:AL1~}~]~[~{~base:DG1~}~]~[~base:DRG~]~[~{~base:PR1~[~{~base:ROL~}~]~}~]~[~{~base:GT1~}~]~[~{~base:IN1~[~base:IN2~]~[~{~base:IN3~}~]~[~{~base:ROL~}~]~}~]~[~base:ACC~]~[~base:UB1~]~[~base:UB2~]~[~base:PDA~]~[~ZBE~]~[~ZFM~]~[~ZFD~]~[~ZW1~]~[~ZW2~]~[~ZW6~]'/>
+
+<SegmentStructure name='IN1' description='Couverture'>
+    <SegmentSubStructure piece='1' description='N1-2' datatype='base:CE' symbol='!' max_length='250' required='R' ifrepeating='0'/>
+    <SegmentSubStructure piece='2' description='N1-3' datatype='base:CX' symbol='!' max_length='250' required='R' ifrepeating='0'/>
+    <SegmentSubStructure piece='3' description='N1-49' datatype='base:CX' symbol='!' max_length='250' required='R' ifrepeating='0'/>
+    <SegmentSubStructure piece='4' description='IN1-35' datatype='base:IS' symbol='!' max_length='20' required='R' ifrepeating='0'/>
+    <SegmentSubStructure piece='5' description='IN1-16 ' datatype='base:XPN' symbol='!' max_length='250' required='R' ifrepeating='0'/>
+    <SegmentSubStructure piece='6' description='IN1-19 ' datatype='base:XAD' symbol='!' max_length='250' required='R' ifrepeating='0'/>
+    <SegmentSubStructure piece='7' description='IN2-63' datatype='base:XTN' symbol='!' max_length='250' required='R' ifrepeating='0'/>
+    <SegmentSubStructure piece='8' description='PID-25' datatype='base:NM' symbol='!' required='R' ifrepeating='0'/>
+    <SegmentSubStructure piece='9' description='IN1-17 ' datatype='base:CE' symbol='!' required='R' ifrepeating='0'/>
+    <SegmentSubStructure piece='10' description='IN1-12' datatype='base:DT' symbol='!' required='R' ifrepeating='0'/>
+    <SegmentSubStructure piece='11' description='IN1-13' datatype='base:DT' symbol='!' required='R' ifrepeating='0'/>
+    <SegmentSubStructure piece='12' description='IN1-15 ' datatype='base:IS' symbol='!' required='R' ifrepeating='0'/>
+    <SegmentSubStructure piece='13' description='IN1-45' datatype='base:ST' symbol='!' required='R' ifrepeating='0'/>
+    <SegmentSubStructure piece='14' description='IN1-14' datatype='base:AUI' symbol='!' required='R' ifrepeating='0'/>
+    <SegmentSubStructure piece='15' description='IN1-31' datatype='base:IS' symbol='!' required='R' ifrepeating='0'/>
+    <SegmentSubStructure piece='16' description='IN1-36' datatype='base:ST' symbol='?' required='C' ifrepeating='0'/>
+    <SegmentSubStructure piece='17' description='PV2-7' symbol='!' required='R' ifrepeating='0'/>
+    <SegmentSubStructure piece='18' description='IN1-20' datatype='base:IS' symbol='!' required='R' ifrepeating='0'/>
+</SegmentStructure>
+<SegmentStructure name='ZBE' description='Action sur un mouvement'>
+    <SegmentSubStructure piece='1' description='Movement ID' datatype='base:EI' symbol='!' max_length='427' required='R' ifrepeating='0'/>
+    <SegmentSubStructure piece='2' description='Start of Movement Date/Time' datatype='base:TS' symbol='!' max_length='26' required='R' ifrepeating='0'/>
+    <SegmentSubStructure piece='3' description='End of Movement Date/Time' datatype='base:TS' max_length='26' required='X' ifrepeating='0'/>
+    <SegmentSubStructure piece='4' description='Action on the Movement' datatype='base:ID' symbol='!' max_length='6' required='R' ifrepeating='0'/>
+    <SegmentSubStructure piece='5' description='Indicator “Historical movement”' datatype='base:ID' symbol='!' required='R' ifrepeating='0'/>
+    <SegmentSubStructure piece='6' description='Original trigger event code' datatype='base:ID' symbol='?' required='C' ifrepeating='0'/>
+    <SegmentSubStructure piece='7' description='Ward of medical responsibility in the period starting with this movement' datatype='base:XON' symbol='?' required='C' ifrepeating='0'/>
+    <SegmentSubStructure piece='8' description='Ward of care responsibility in the period starting with this movement' datatype='base:XON' symbol='?' required='C' ifrepeating='0'/>
+    <SegmentSubStructure piece='9' description='Nature of this movement' datatype='base:CWE' symbol='!' required='R' ifrepeating='0'/>
+</SegmentStructure>
+<SegmentStructure name='ZFD' description=' Complément démographique'>
+    <SegmentSubStructure piece='1' description='Date Lunaire' datatype='base:NA' max_length='8' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='2' description='Nombre de semaines de gestation' datatype='base:NM' max_length='16' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='3' description='field3' required='O' ifrepeating='0'/>
+</SegmentStructure>
+<SegmentStructure name='ZFM' description='Mouvement PMSI'>
+    <SegmentSubStructure piece='1' description='Mode d’entrée PMSI' datatype='base:IS' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='2' description='Mode de sortie PMSI' datatype='base:IS' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='3' description='Mode de provenance PMSI' datatype='base:IS' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='4' description='Mode de destination PMSI' datatype='base:IS' required='O' ifrepeating='0'/>
+</SegmentStructure>
+<SegmentStructure name='ZW1'>
+    <SegmentSubStructure piece='1' description='field1' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='2' description='field2' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='3' description='field3' required='O' ifrepeating='0'/>
+</SegmentStructure>
+<SegmentStructure name='ZW2'>
+    <SegmentSubStructure piece='1' description='field1' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='2' description='field2' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='3' description='field3' required='O' ifrepeating='0'/>
+</SegmentStructure>
+<SegmentStructure name='ZW6'>
+    <SegmentSubStructure piece='1' description='field1' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='2' description='field2' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='3' description='field3' required='O' ifrepeating='0'/>
+</SegmentStructure>
+
+</Category>
+</Document>
+
+<Document name="Settings:Identity.PTD"><ProjectTextDocument name="Settings:Identity" description="Settings for Identity in Production LEFENPKG.FoundationProduction">
+<![CDATA[<Item Name="Identity" Category="" ClassName="EnsLib.HL7.Operation.FTPOperation" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule=""><Setting Target="Adapter" Name="FTPServer"></Setting><Setting Target="Adapter" Name="FTPPort">22</Setting><Setting Target="Host" Name="Filename">%f_%Q%!+(_a)</Setting></Item>
+]]></ProjectTextDocument>
+</Document>
+
+<Document name="Settings:Lifen.IN.PTD"><ProjectTextDocument name="Settings:Lifen.IN" description="Settings for Lifen.IN in Production LEFENPKG.FoundationProduction">
+<![CDATA[<Item Name="Lifen.IN" Category="" ClassName="EnsLib.HL7.Service.FileService" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule=""><Setting Target="Host" Name="TargetConfigNames">lifen_Router</Setting><Setting Target="Adapter" Name="FileSpec">*.hl7</Setting><Setting Target="Host" Name="MessageSchemaCategory">Lifen2.5</Setting><Setting Target="Adapter" Name="FilePath">/home/AdminYDG/TestSedki</Setting></Item>
+]]></ProjectTextDocument>
+</Document>
+
+<Document name="Settings:Sejour.PTD"><ProjectTextDocument name="Settings:Sejour" description="Settings for Sejour in Production LEFENPKG.FoundationProduction">
+<![CDATA[<Item Name="Sejour" Category="" ClassName="EnsLib.HL7.Operation.FTPOperation" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule=""><Setting Target="Adapter" Name="FTPServer"></Setting><Setting Target="Adapter" Name="FTPPort">22</Setting><Setting Target="Host" Name="Filename">%f_%Q%!+(_a)</Setting><Setting Target="Adapter" Name="Protocol">SFTP</Setting></Item>
+]]></ProjectTextDocument>
+</Document>
+
+<Document name="Settings:lifen.PTD"><ProjectTextDocument name="Settings:lifen" description="Settings for lifen in Production LEFENPKG.FoundationProduction">
+<![CDATA[<Item Name="lifen" Category="" ClassName="EnsLib.HL7.Service.FTPService" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule=""><Setting Target="Host" Name="MessageSchemaCategory">Lifen2.5</Setting><Setting Target="Host" Name="TargetConfigNames">lifen_Router</Setting><Setting Target="Adapter" Name="FTPServer"></Setting><Setting Target="Adapter" Name="FTPPort">22</Setting><Setting Target="Adapter" Name="ArchivePath">/usr/irissys/mgr/</Setting><Setting Target="Adapter" Name="FileSpec">*.HL7</Setting><Setting Target="Host" Name="AckTargetConfigNames">lifen_Router</Setting><Setting Target="Adapter" Name="SSLConfig">*</Setting></Item>
+]]></ProjectTextDocument>
+</Document>
+
+<Document name="Settings:lifen_Router.PTD"><ProjectTextDocument name="Settings:lifen_Router" description="Settings for lifen_Router in Production LEFENPKG.FoundationProduction">
+<![CDATA[<Item Name="lifen_Router" Category="" ClassName="EnsLib.HL7.MsgRouter.RoutingEngine" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule=""><Setting Target="Host" Name="BusinessRuleName">LEFENPKG.lifenRoutingRule</Setting></Item>
+]]></ProjectTextDocument>
+</Document></Export>
