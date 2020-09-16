@@ -1,0 +1,1258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="IRIS" version="26" zv="IRIS for UNIX (Ubuntu Server LTS for x86-64) 2020.1 (Build 217_1U)" ts="2020-09-16 11:06:39">
+<Class name="AHP.Functions.utils">
+<Super>Ens.Rule.FunctionSet</Super>
+<TimeChanged>63218,50713.213126</TimeChanged>
+<TimeCreated>62865,55749.876549</TimeCreated>
+
+<Method name="IsDeceased">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>source:%String</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set response=""
+	if source="" {
+		set response="N"
+	}
+	else {
+		set response="Y"
+	}
+	
+	quit response
+]]></Implementation>
+</Method>
+
+<UDLText name="T">
+<Content><![CDATA[
+/*  SET Time=$PIECE($NOW(),",",2)
+  SET Sec=Time#60
+  SET Totmin=Time\60
+  SET Min=Totmin#60
+  SET Milhour=Totmin\60
+  IF Milhour=12 { SET Hour=12,Meridian=" pm" }
+  ELSEIF Milhour>12 { SET Hour=Milhour-12,Meridian=" pm" }
+  ELSE { SET Hour=Milhour,Meridian=" am" }
+  WRITE !,Hour,":",Min,":",Sec,Meridian
+  */
+]]></Content>
+</UDLText>
+
+<Method name="SystemDateToYYYYMMDDHHNNSS">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	//20110526113508
+	set Date= $ZDATE($HOROLOG,8)
+		
+   	set Time= $ZTIME($PIECE($HOROLOG,",",2),1)
+ 	set Time= $REPLACE(Time,":","")
+ 	
+	quit Date_Time
+]]></Implementation>
+</Method>
+
+<Method name="ConvertSIUMessageType">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>source:%String</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	quit $CASE(source,
+						"S12":"C",
+						"S17":"S",
+						"S13":"M",
+						"S14":"M",
+						:"M")
+]]></Implementation>
+</Method>
+
+<Method name="ConvertADTMessageTypeForPHARMA">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>source:%String</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set response=source
+	if source="A06" {
+		set response="A01"
+	}
+	
+	if source="A07" {
+		set response="A11"
+	}
+	
+	quit response
+]]></Implementation>
+</Method>
+
+<Method name="ConvertADTMessageTypeForHEMADIA">
+<Description>
+A02 devient un A01 pour HEMADIALYSE uniquement</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>source:%String</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set response=source
+	if source="A02" {
+		set response="A01"
+	}
+	
+	quit response
+]]></Implementation>
+</Method>
+
+<Method name="ConvertSIUMessageTypeForAIDA">
+<Description>
+S17 devient S15 pour AIDA</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>source:%String</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	quit $CASE(source,
+						"S12":"S12",
+						"S17":"S15",
+						"S13":"S13",
+						"S14":"S14",
+						:"S12")
+]]></Implementation>
+</Method>
+
+<Method name="ConvertDateToYYYYMMDD">
+<Description>
+Permet de convertir une chaîne 10/04/2013 en une chaîne de date au format 20130410.</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>source:%String</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set response=""
+	if source="" {
+		set response=""
+	}
+	else {
+		//1970-04-10 00:00:00.000
+		set response=$WEXTRACT(source,1,4)_$WEXTRACT(source,6,7)_$WEXTRACT(source,9,10)
+	}
+	
+	quit response
+]]></Implementation>
+</Method>
+
+<Method name="ConvertDateToYYYYMMDDHHmm00">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>sourceDate:%String,sourceHeure:%String</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set response=""
+	if sourceDate="" {
+		set response=""
+	}
+	else {
+		//1970-04-10 00:00:00.000
+		set response=$WEXTRACT(sourceDate,1,4)_$WEXTRACT(sourceDate,6,7)_$WEXTRACT(sourceDate,9,10)
+	}
+	
+	if sourceHeure '="" {
+		set response=response_$WEXTRACT(sourceHeure,1,2)_$WEXTRACT(sourceHeure,3,4)_"00"
+	}
+	
+	quit response
+]]></Implementation>
+</Method>
+
+<Method name="QuoteEmptyString">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>source:%String</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set response=source
+	if source="" {
+		set response=""""""
+	}
+	quit response
+]]></Implementation>
+</Method>
+
+<Method name="ConvertDateToFrenchDate">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>source:%String</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set response=""
+	if source="" {
+		set response=""
+	}
+	else {
+		//1970-04-10 00:00:00.000
+		set response=$WEXTRACT(source,9,10)_"/"_$WEXTRACT(source,6,7)_"/"_$WEXTRACT(source,1,4)
+	}
+	
+	quit response
+]]></Implementation>
+</Method>
+
+<Method name="ConvertStdDateToYYYYMMDD">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>source:%String</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set response=""
+	if source="" {
+		set response=""
+	}
+	else {
+		//20/12/1965
+		set response=$WEXTRACT(source,7,10)_$WEXTRACT(source,4,5)_$WEXTRACT(source,1,2)
+	}
+	
+	quit response
+]]></Implementation>
+</Method>
+
+<Method name="ConvertSexe">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>source:%String</FormalSpec>
+<ReturnType>%Integer</ReturnType>
+<Implementation><![CDATA[
+	quit $CASE(source,
+						"M":1,
+						"F":2,
+						:1)
+]]></Implementation>
+</Method>
+
+<Method name="ToString">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>source:%Integer</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit source
+]]></Implementation>
+</Method>
+
+<Method name="PatientExisteViewpoint">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>source:%Integer</FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[	quit ##class(AHP.Classes.Databases.AHP.StoredProcedure).PatientExisteViewpoint(source)
+]]></Implementation>
+</Method>
+
+<Method name="RecupererDernierSejourHospit">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>source:%Integer</FormalSpec>
+<ReturnType>%Integer</ReturnType>
+<Implementation><![CDATA[	quit ##class(AHP.Classes.Databases.AHP.StoredProcedure).PatientRecupererDernierSejourHospit( source)
+]]></Implementation>
+</Method>
+
+<Method name="IsNull">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>source:%String,default:%String</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	If source = "" {
+		quit default
+	}
+	else {
+		quit source
+	}
+]]></Implementation>
+</Method>
+
+<Method name="FindInStream">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>source:%Stream.GlobalCharacter,stringToFind:%String(MAXLEN=255)</FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	set tmp = ""
+	set ret = source.FindAt(1,stringToFind,tmp)
+	
+	If (ret = -1)
+	{
+		quit 0
+	}
+	else
+	{
+		quit 1
+	}
+]]></Implementation>
+</Method>
+
+<Method name="ConvertToAZAvecPonctuation">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>source:%String(MAXLEN=255)</FormalSpec>
+<ReturnType>%String</ReturnType>
+<ReturnTypeParams>MAXLEN=255</ReturnTypeParams>
+<Implementation><![CDATA[
+	set result = ""
+	set source = $ZConvert(source,"t")
+	set pos = 0
+	set car = ""
+	
+	WHILE (pos < $Length(source)) {
+		set pos = pos + 1
+		set car = $Extract(source,pos)
+		set carCode = $ASCII(car)
+		
+		IF (carCode>=32) && (carCode<=125)		//(espace-32 .. A-65 .. Z-90 .. }-125)
+			{ set result = result_car }
+		elseif ( carCode>=200) && (carCode<=203 ) //(È-200 , É-201 , Ê-202 , Ë-203)
+			{ set result = result_"E" }
+		elseif ( carCode>=192) && (carCode<=198 )	//(À-192 , Á-193 , Â-194 , Ã-195 , Ä-196 , Å-197 , Æ-198)
+			{ set result = result_"A" }
+		elseif ( carCode>=210) && (carCode<=214)	//(Ò-210 , Ó-211 , Ô-212 , Õ-213 , Ö-214)
+			{ set result = result_"O" }
+		elseif ( carCode>=217) && (carCode<=220)	//(Ù-217 , Ú-218 , Û-219 , Ü-220)
+			{ set result = result_"U" }
+		elseif ( carCode>=204) && (carCode<=207)	//(Ì-204 , Í-205 , Î-206 , Ï-207)
+			{ set result = result_"I" }
+		elseif ( carCode=221) || (carCode=159)	//(Ý-221 , Ÿ-159)
+			{ set result = result_"Y" }
+		elseif ( carCode=199)			//(Ç-199)
+			{ set result = result_"C" }
+		elseif ( carCode=209)			//(Ñ-209)
+			{ set result = result_"N" }
+		elseif ( carCode=208)			//(Ð-208)
+			{ set result = result_"D" }
+	}
+  quit result
+]]></Implementation>
+</Method>
+</Class>
+
+
+<Class name="CHSQT.HL7.ADTtr">
+<Super>Ens.DataTransformDTL</Super>
+<TimeChanged>65252,44560.139268</TimeChanged>
+<TimeCreated>63676,63366.79738</TimeCreated>
+<DependsOn>EnsLib.HL7.Message</DependsOn>
+
+<XData name="DTL">
+<XMLNamespace>http://www.intersystems.com/dtl</XMLNamespace>
+<Data><![CDATA[
+<transform sourceClass='EnsLib.HL7.Message' targetClass='EnsLib.HL7.Message' sourceDocType='CustomNewPastel:ADT_A01' targetDocType='CustomNewPastel:ADT_A01' create='new' language='objectscript' >
+<assign value='source' property='target' action='set' />
+<assign value='"P"' property='target.{MSH:ProcessingID}' action='set' />
+<assign value='"2.3.1"' property='target.{MSH:VersionID}' action='set' />
+<assign value='"19900101"' property='target.{ROL():RoleBeginDateTime}' action='set' />
+<assign value='"29990101"' property='target.{ROL():RoleEndDateTime}' action='set' />
+<assign value='source.{PID:PatientAddress().ZiporPostalCode}' property='val' action='set' />
+<assign value='target.{PID:PatientAddress().ZiporPostalCode}' property='val' action='set' />
+<if condition='$ISVALIDNUM(val) = 0' >
+<true>
+<assign value='' property='target.{PID:SSNNumberPatient}' action='clear' />
+</true>
+<false>
+<if condition='..Length(source.{PID:SSNNumberPatient})&gt; 17' >
+<true>
+<assign value='' property='target.{PID:SSNNumberPatient}' action='clear' />
+</true>
+</if>
+</false>
+</if>
+<if condition='source.{PV1:PatientClass} = "O"' >
+<true>
+<assign value='' property='target.{PV1:AssignedPatientLocation}' action='clear' />
+<assign value='' property='target.{ZFU:Champs3}' action='clear' />
+<assign value='' property='target.{ZFU:Champs4}' action='clear' />
+</true>
+<false>
+<assign value='"022"' property='target.{PV1:AssignedPatientLocation.AssigningAuthorityforLocatio}' action='set' />
+</false>
+</if>
+</transform>
+]]></Data>
+</XData>
+
+<Parameter name="IGNOREMISSINGSOURCE">
+<Default>1</Default>
+</Parameter>
+
+<Parameter name="REPORTERRORS">
+<Default>1</Default>
+</Parameter>
+</Class>
+
+
+<Project name="EnsExportItem_2020-09-16 11-05-54_877+0" LastModified="2020-09-16 11:06:39.898171">
+  <ProjectDescription>Studio Project generated starting from Production Configuration Item 'DACETABLISSEMENTFHIRPKG.FoundationProduction : HL7.routeur' at 2020-09-16 11:05:54.877 UTC</ProjectDescription>
+  <Items>
+    <ProjectItem name="AHP.Functions.utils" type="CLS"></ProjectItem>
+    <ProjectItem name="CHSQT.HL7.ADTtr" type="CLS"></ProjectItem>
+    <ProjectItem name="HL7.routeurRoutingRule" type="CLS"></ProjectItem>
+    <ProjectItem name="SQT.HL7.Clinicom.ADT.DAC" type="CLS"></ProjectItem>
+    <ProjectItem name="SQT.HL7.Clinicom.ADT.IDO.BPLTest" type="CLS"></ProjectItem>
+    <ProjectItem name="SQT.HL7.DAC.NSS" type="CLS"></ProjectItem>
+    <ProjectItem name="SQT.HL7.Pastel.ADT.IDO.TransformationBPlACK" type="CLS"></ProjectItem>
+    <ProjectItem name="CustomNewPastel.HL7" type="HL7"></ProjectItem>
+    <ProjectItem name="Settings:Etablissement.Dac.Output.PTD" type="PTD"></ProjectItem>
+    <ProjectItem name="Settings:Etablissement.Dac.Test.PTD" type="PTD"></ProjectItem>
+    <ProjectItem name="Settings:HL7.routeur.PTD" type="PTD"></ProjectItem>
+    <ProjectItem name="Settings:IDO.BPLtest.PTD" type="PTD"></ProjectItem>
+    <ProjectItem name="Settings:Orbis.HL7.Admission.PTD" type="PTD"></ProjectItem>
+    <ProjectItem name="EnsExportNotes.EnsExportItem_2020-09-16 11-05-54_877+0.PTD" type="PTD"></ProjectItem>
+  </Items>
+</Project>
+
+
+<Class name="HL7.routeurRoutingRule">
+<Description>
+</Description>
+<Super>Ens.Rule.Definition</Super>
+<TimeChanged>65296,52022.221233</TimeChanged>
+<TimeCreated>65225,54522.543645</TimeCreated>
+
+<Parameter name="RuleAssistClass">
+<Default>EnsLib.HL7.MsgRouter.RuleAssist</Default>
+</Parameter>
+
+<XData name="RuleDefinition">
+<XMLNamespace>http://www.intersystems.com/rule</XMLNamespace>
+<Data><![CDATA[
+<ruleDefinition alias="" context="EnsLib.HL7.MsgRouter.RoutingEngine" production="DACETABLISSEMENTFHIRPKG.FoundationProduction">
+<ruleSet name="" effectiveBegin="" effectiveEnd="">
+<rule name="Rouls3" disabled="false">
+<constraint name="source" value="Etablissement.Dac.Test"></constraint>
+<when condition="(DocName Contains &quot;A40&quot;)||(DocName Contains &quot;A28&quot;)||(DocName Contains &quot;A31&quot;)">
+<send transform="" target="IDO.BPLtest"></send>
+<return></return>
+</when>
+<otherwise>
+<send transform="SQT.HL7.DAC.NSS,CHSQT.HL7.ADTtr" target="Orbis.HL7.Admission,Etablissement.Dac.Output"></send>
+<return></return>
+</otherwise>
+</rule>
+</ruleSet>
+</ruleDefinition>
+]]></Data>
+</XData>
+</Class>
+
+
+<Class name="SQT.HL7.Clinicom.ADT.DAC">
+<Super>Ens.DataTransformDTL</Super>
+<TimeChanged>65252,43968.19641</TimeChanged>
+<TimeCreated>65106,40696.160547</TimeCreated>
+<DependsOn>EnsLib.HL7.Message</DependsOn>
+
+<XData name="DTL">
+<XMLNamespace>http://www.intersystems.com/dtl</XMLNamespace>
+<Data><![CDATA[
+<transform sourceClass='EnsLib.HL7.Message' targetClass='EnsLib.HL7.Message' sourceDocType='CustomNewPastel:ADT_A01' targetDocType='CustomNewPastel:ADT_A01' create='new' language='objectscript' >
+<assign value='source' property='target' action='set' />
+<sql>
+<annotation>select ReceivingApplication INTO :receivingfacility,SendingFacility INTO :sendingfacility, ReceivingFacility INTO :ReceivingFacility, DI INTO :DI, DA INTO :DA, SendingApplication INTO :SendingApplication from Pastel_OID.TabledesValeurs
+where
+SendingFacility = &#39;CHSTQ&#39;</annotation>
+<![CDATA[select SendingFacility, ReceivingApplication, ReceivingFacility, DI, DA, SendingApplication INTO  :sendingfacility, :ReceivingApplication, :receivingfacility, :DI,  :DA, :SendingApplication 
+from Pastel_OID.TabledesValeurs
+where
+SendingFacility = 'CHPER']]]]><![CDATA[></sql>
+<assign value='SendingApplication ' property='target.{MSH:SendingApplication}' action='set' />
+<assign value='sendingfacility' property='target.{MSH:SendingFacility}' action='set' />
+<assign value='ReceivingApplication' property='target.{MSH:ReceivingApplication}' action='set' />
+<assign value='receivingfacility' property='target.{MSH:ReceivingFacility}' action='set' />
+<if condition='source.{PID:PatientAddress().Country} = "F"' >
+<true>
+<assign value='"FRA"' property='target.{PID:PatientAddress().Country}' action='set' />
+</true>
+</if>
+<foreach property='source.{PID:PatientIdentifierList()}' key='k1' >
+<if condition='source.{PID:PatientIdentifierList(k1).IdentifierTypeCode}="INS-C"' >
+<true>
+<assign value='"INS-C"' property='target.{PID:PatientIdentifierList(k1).IdentifierTypeCode}' action='set' />
+<assign value='"ASIP-SANTE-INS-C"' property='target.{PID:PatientIdentifierList(k1).AssigningAuthority.NamespaceID}' action='set' />
+<assign value='"1.2.250.1.213.1.4.2"' property='target.{PID:PatientIdentifierList(k1).AssigningAuthority.UniversalID}' action='set' />
+<assign value='source.{PID:PatientIdentifierList(k1).EffectiveDate}' property='target.{PID:PatientIdentifierList(k1).EffectiveDate}' action='set' />
+<assign value='"ISO"' property='target.{PID:PatientIdentifierList(k1).AssigningAuthority.UniversalIDType}' action='set' />
+</true>
+<false>
+<if condition='source.{PID:PatientIdentifierList(k1).IdentifierTypeCode}="PI"' >
+<true>
+<assign value='"ISO"' property='target.{PID:PatientIdentifierList(k1).AssigningAuthority.UniversalIDType}' action='set' />
+<assign value='DI' property='target.{PID:PatientIdentifierList(k1).AssigningAuthority.UniversalID}' action='set' />
+<assign value='""' property='target.{PID:PatientIdentifierList(k1).AssigningAuthority.NamespaceID}' action='set' />
+</true>
+</if>
+</false>
+</if>
+</foreach>
+<if condition='source.{MRG:MovementID.SUB5} = "PI"' >
+<true>
+<assign value='""' property='target.{MRG:MovementID.SUB4.SubSub1}' action='set' />
+<assign value='DI' property='target.{MRG:MovementID.SUB4.SubSub2}' action='set' />
+<assign value='"ISO"' property='target.{MRG:MovementID.SUB4.SubSub3}' action='set' />
+</true>
+</if>
+<foreach property='source.{PID:MothersIdentifier()}' key='k1' >
+<if condition='source.{PID:MothersIdentifier(k1).IdentifierTypeCode} = "PI"' >
+<true>
+<assign value='""' property='target.{PID:MothersIdentifier(k1).AssigningAuthority.NamespaceID}' action='set' />
+<assign value='DI' property='target.{PID:MothersIdentifier(k1).AssigningAuthority.UniversalID}' action='set' />
+<assign value='"ISO"' property='target.{PID:MothersIdentifier(k1).AssigningAuthority.UniversalIDType}' action='set' />
+</true>
+</if>
+<if condition='source.{PID:MothersIdentifier(k1).IdentifierTypeCode}="AN"' >
+<true>
+<assign value='""' property='target.{PID:MothersIdentifier(k1).AssigningAuthority.NamespaceID}' action='set' />
+<assign value='DA' property='target.{PID:MothersIdentifier(k1).AssigningAuthority.UniversalID}' action='set' />
+<assign value='"ISO"' property='target.{PID:MothersIdentifier(k1).AssigningAuthority.UniversalIDType}' action='set' />
+</true>
+</if>
+</foreach>
+<if condition='source.{PID:PatientAccountNumber.IdentifierTypeCode} = "AN"' >
+<true>
+<assign value='""' property='target.{PID:PatientAccountNumber.AssigningAuthority.NamespaceID}' action='set' />
+<assign value='DA' property='target.{PID:PatientAccountNumber.AssigningAuthority.UniversalID}' action='set' />
+<assign value='"ISO"' property='target.{PID:PatientAccountNumber.AssigningAuthority.UniversalIDType}' action='set' />
+<assign value='"AN"' property='target.{PID:PatientAccountNumber.IdentifierTypeCode}' action='set' />
+</true>
+</if>
+<if condition='source.{PV1:AssignedPatientLocation}= ""' >
+<false>
+<assign value='"ISO"' property='target.{PV1:AssignedPatientLocation.Facility.UniversalIDType}' action='set' />
+<assign value='""' property='target.{PV1:AssignedPatientLocation.Facility.NamespaceID}' action='set' />
+<assign value='DA' property='target.{PV1:AssignedPatientLocation.Facility.UniversalID}' action='set' />
+</false>
+</if>
+<if condition='source.{PV1:VisitNumber} = "VN"' >
+<true>
+<assign value='""' property='target.{PV1:VisitNumber.AssigningAuthority.NamespaceID}' action='set' />
+<assign value='DA' property='target.{PV1:VisitNumber.AssigningAuthority.UniversalID}' action='set' />
+<assign value='"ISO"' property='target.{PV1:VisitNumber.AssigningAuthority.UniversalIDType}' action='set' />
+</true>
+</if>
+<if condition='source.{ZBE:MovementID}=""' >
+<false>
+<assign value='source.{ZBE:MovementID.SUB1}' property='target.{ZBE:MovementID.SUB1}' action='set' />
+<assign value='""' property='target.{ZBE:MovementID.SUB2}' action='set' />
+<assign value='DA' property='target.{ZBE:MovementID.SUB3}' action='set' />
+<assign value='"ISO"' property='target.{ZBE:MovementID.SUB4}' action='set' />
+</false>
+</if>
+<if condition='source.{ZBE:ResponsibleWard.SUB6}=""' >
+<false>
+<assign value='""' property='target.{ZBE:ResponsibleWard.SUB6.SUB1}' action='set' />
+<assign value='DA' property='target.{ZBE:ResponsibleWard.SUB6.SUB2}' action='set' />
+<assign value='"ISO"' property='target.{ZBE:ResponsibleWard.SUB6.SUB3}' action='set' />
+</false>
+</if>
+<if condition='source.{ZBE:Champ8.SUB6}=""' >
+<false>
+<assign value='""' property='target.{ZBE:Champ8.SUB6.SUB1}' action='set' />
+<assign value='DA' property='target.{ZBE:Champ8.SUB6.SUB2}' action='set' />
+<assign value='"ISO"' property='target.{ZBE:Champ8.SUB6.SUB3}' action='set' />
+</false>
+</if>
+<foreach property='source.{ROL()}' key='k2' >
+<foreach property='source.{ROL(k2):RolePerson()}' key='k1' >
+<if condition='source.{ROL(k2):RolePerson(k1).IdentifierTypeCode} = "ADELI"' >
+<true>
+<assign value='"ASIP-SANTE-PS"' property='target.{ROL(k2):RolePerson(k1).AssigningAuthority.NamespaceID}' action='set' />
+<assign value='"1.2.250.1.71.4.2.1"' property='target.{ROL(k2):RolePerson(k1).AssigningAuthority.UniversalID}' action='set' />
+<assign value='"ISO"' property='target.{ROL(k2):RolePerson(k1).AssigningAuthority.UniversalIDType}' action='set' />
+</true>
+<false>
+<if condition='source.{ROL(k2):RolePerson(k1).IdentifierTypeCode} = "RPPS"' >
+<true>
+<assign value='"ASIP-SANTE-PS"' property='target.{ROL(k2):RolePerson(k1).AssigningAuthority.NamespaceID}' action='set' />
+<assign value='"1.2.250.1.71.4.2.1"' property='target.{ROL(k2):RolePerson(k1).AssigningAuthority.UniversalID}' action='set' />
+<assign value='"ISO"' property='target.{ROL(k2):RolePerson(k1).AssigningAuthority.UniversalIDType}' action='set' />
+</true>
+</if>
+<if condition='source.{ROL(k2):RolePerson(k1).IdentifierTypeCode} = "IDNAT"' >
+<true>
+<assign value='"ASIP-SANTE-PS"' property='target.{ROL(k2):RolePerson(k1).AssigningAuthority.NamespaceID}' action='set' />
+<assign value='"1.2.250.1.71.4.2.1"' property='target.{ROL(k2):RolePerson(k1).AssigningAuthority.UniversalID}' action='set' />
+<assign value='"ISO"' property='target.{ROL(k2):RolePerson(k1).AssigningAuthority.UniversalIDType}' action='set' />
+</true>
+</if>
+</false>
+</if>
+<if condition='source.{ROL(k2):RolePerson(k1).IdentifierTypeCode}="EI"' >
+<true>
+<assign value='source.{ROL(k2):RolePerson(k1).AssigningFacility.NamespaceID}' property='target.{ROL(k2):RolePerson(k1).AssigningAuthority.NamespaceID}' action='set' />
+<assign value='source.{ROL(k2):RolePerson(k1).AssigningFacility.UniversalID}' property='target.{ROL(k2):RolePerson(k1).AssigningAuthority.UniversalID}' action='set' />
+<assign value='"N"' property='target.{ROL(k2):RolePerson(k1).AssigningAuthority.UniversalIDType}' action='set' />
+</true>
+</if>
+</foreach>
+</foreach>
+<if condition='source.{PV1:AttendingDoctor()} = ""' >
+<false>
+<foreach property='source.{PV1:AttendingDoctor()}' key='k3' >
+<if condition='source.{PV1:AttendingDoctor(k3).IdentifierTypeCode}= "ADELI"' >
+<true>
+<assign value='"ASIP-SANTE-PS"' property='target.{PV1:AttendingDoctor(k3).AssigningAuthority.NamespaceID}' action='set' />
+<assign value='"1.2.250.1.71.4.2.1"' property='target.{PV1:AttendingDoctor(k3).AssigningAuthority.UniversalID}' action='set' />
+<assign value='"ISO"' property='target.{PV1:AttendingDoctor(k3).AssigningAuthority.UniversalIDType}' action='set' />
+</true>
+</if>
+<if condition='source.{PV1:AttendingDoctor(k3).IdentifierTypeCode}= "RPPS"' >
+<true>
+<assign value='"ASIP-SANTE-PS"' property='target.{PV1:AttendingDoctor(k3).AssigningAuthority.NamespaceID}' action='set' />
+<assign value='"1.2.250.1.71.4.2.1"' property='target.{PV1:AttendingDoctor(k3).AssigningAuthority.UniversalID}' action='set' />
+<assign value='"ISO"' property='target.{PV1:AttendingDoctor(k3).AssigningAuthority.UniversalIDType}' action='set' />
+</true>
+</if>
+<if condition='source.{PV1:AttendingDoctor(k3).IdentifierTypeCode}="IDNAT"' >
+<true>
+<assign value='"ASIP-SANTE-PS"' property='target.{PV1:AttendingDoctor(k3).AssigningAuthority.NamespaceID}' action='set' />
+<assign value='"1.2.250.1.71.4.2.1"' property='target.{PV1:AttendingDoctor(k3).AssigningAuthority.UniversalID}' action='set' />
+<assign value='"ISO"' property='target.{PV1:AttendingDoctor(k3).AssigningAuthority.UniversalIDType}' action='set' />
+</true>
+</if>
+<if condition='source.{PV1:AttendingDoctor(k3).IdentifierTypeCode} ="EI"' >
+<true>
+<assign value='source.{PV1:AttendingDoctor(k3).AssigningFacility.NamespaceID}' property='target.{PV1:AttendingDoctor(k3).AssigningAuthority.NamespaceID}' action='set' />
+<assign value='source.{PV1:AttendingDoctor(k3).AssigningFacility.UniversalID}' property='target.{PV1:AttendingDoctor(k3).AssigningAuthority.UniversalID}' action='set' />
+<assign value='"N"' property='target.{PV1:AttendingDoctor(k3).AssigningAuthority.UniversalIDType}' action='set' />
+</true>
+</if>
+</foreach>
+</false>
+</if>
+<if condition='source.{PV1:ReferringDoctor()} = ""' >
+<false>
+<foreach property='source.{PV1:ReferringDoctor()}' key='k1' >
+<if condition='source.{PV1:ReferringDoctor(k1).IdentifierTypeCode} =  "ADELI"' >
+<true>
+<assign value='"ASIP-SANTE-PS"' property='target.{PV1:ReferringDoctor(k1).AssigningAuthority.NamespaceID}' action='set' />
+<assign value='"1.2.250.1.71.4.2.1"' property='target.{PV1:ReferringDoctor(k1).AssigningAuthority.UniversalID}' action='set' />
+<assign value='"ISO"' property='target.{PV1:ReferringDoctor(k1).AssigningAuthority.UniversalIDType}' action='set' />
+</true>
+</if>
+<if condition='source.{PV1:ReferringDoctor(k1).IdentifierTypeCode} = "RPPS" ' >
+<true>
+<assign value='"ASIP-SANTE-PS"' property='target.{PV1:ReferringDoctor(k1).AssigningAuthority.NamespaceID}' action='set' />
+<assign value='"1.2.250.1.71.4.2.1"' property='target.{PV1:ReferringDoctor(k1).AssigningAuthority.UniversalID}' action='set' />
+<assign value='"ISO"' property='target.{PV1:ReferringDoctor(k1).AssigningAuthority.UniversalIDType}' action='set' />
+</true>
+</if>
+<if condition='source.{PV1:ReferringDoctor(k1).IdentifierTypeCode} ="IDNAT" ' >
+<true>
+<assign value='"ASIP-SANTE-PS"' property='target.{PV1:ReferringDoctor(k1).AssigningAuthority.NamespaceID}' action='set' />
+<assign value='"1.2.250.1.71.4.2.1"' property='target.{PV1:ReferringDoctor(k1).AssigningAuthority.UniversalID}' action='set' />
+<assign value='"ISO"' property='target.{PV1:ReferringDoctor(k1).AssigningAuthority.UniversalIDType}' action='set' />
+</true>
+</if>
+<if condition='source.{PV1:ReferringDoctor(k1).IdentifierTypeCode} = "EI"' >
+<true>
+<assign value='source.{PV1:ReferringDoctor(k1).AssigningFacility.NamespaceID}' property='target.{PV1:ReferringDoctor(k1).AssigningAuthority.NamespaceID}' action='set' />
+<assign value='source.{PV1:ReferringDoctor(k1).AssigningFacility.UniversalID}' property='target.{PV1:ReferringDoctor(k1).AssigningAuthority.UniversalID}' action='set' />
+<assign value='"N"' property='target.{PV1:ReferringDoctor(k1).AssigningAuthority.UniversalIDType}' action='set' />
+</true>
+</if>
+</foreach>
+</false>
+</if>
+<if condition='source.{PV1:ConsultingDoctor()} = ""' >
+<false>
+<foreach property='source.{PV1:ConsultingDoctor()}' key='k1' >
+<if condition='source.{PV1:ConsultingDoctor(k1).IdentifierTypeCode} = "ADELI"' >
+<true>
+<assign value='"ASIP-SANTE-PS"' property='target.{PV1:ConsultingDoctor(k1).AssigningAuthority.NamespaceID}' action='set' />
+<assign value='"1.2.250.1.71.4.2.1"' property='target.{PV1:ConsultingDoctor(k1).AssigningAuthority.UniversalID}' action='set' />
+<assign value='"ISO"' property='target.{PV1:ConsultingDoctor(k1).AssigningAuthority.UniversalIDType}' action='set' />
+</true>
+</if>
+<if condition='source.{PV1:ConsultingDoctor(k1).IdentifierTypeCode} = "RPPS"' >
+<true>
+<assign value='"ASIP-SANTE-PS"' property='target.{PV1:ConsultingDoctor(k1).AssigningAuthority.NamespaceID}' action='set' />
+<assign value='"1.2.250.1.71.4.2.1"' property='target.{PV1:ConsultingDoctor(k1).AssigningAuthority.UniversalID}' action='set' />
+<assign value='"ISO"' property='target.{PV1:ConsultingDoctor(k1).AssigningAuthority.UniversalIDType}' action='set' />
+</true>
+</if>
+<if condition='source.{PV1:ConsultingDoctor(k1).IdentifierTypeCode}= "IDNAT"' >
+<true>
+<assign value='"ASIP-SANTE-PS"' property='target.{PV1:ConsultingDoctor(k1).AssigningAuthority.NamespaceID}' action='set' />
+<assign value='"1.2.250.1.71.4.2.1"' property='target.{PV1:ConsultingDoctor(k1).AssigningAuthority.UniversalID}' action='set' />
+<assign value='"ISO"' property='target.{PV1:ConsultingDoctor(k1).AssigningAuthority.UniversalIDType}' action='set' />
+</true>
+</if>
+<if condition='source.{PV1:ConsultingDoctor(k1).IdentifierTypeCode}="EI"' >
+<true>
+<assign value='source.{PV1:ConsultingDoctor(k1).AssigningFacility.NamespaceID}' property='target.{PV1:ConsultingDoctor(k1).AssigningAuthority.NamespaceID}' action='set' />
+<assign value='source.{PV1:ConsultingDoctor(k1).AssigningFacility.UniversalID}' property='target.{PV1:ConsultingDoctor(k1).AssigningAuthority.UniversalID}' action='set' />
+<assign value='"N"' property='target.{PV1:ConsultingDoctor(k1).AssigningAuthority.UniversalIDType}' action='set' />
+</true>
+</if>
+</foreach>
+</false>
+</if>
+<if condition='source.{PV1:AdmitSource} = ""' >
+<false>
+<if condition='..Lookup("table_transcodification_PV1.14_Pastel",source.{PV1:AdmitSource})= ""' >
+<true>
+<assign value='source.{PV1:AdmitSource}' property='target.{PV1:AdmitSource}' action='set' />
+</true>
+<false>
+<assign value='..Lookup("table_transcodification_PV1.14_Pastel",source.{PV1:AdmitSource})' property='target.{PV1:AdmitSource}' action='set' />
+</false>
+</if>
+</false>
+</if>
+<assign value='"2.5"' property='target.{MSH:VersionID.VersionID}' action='set' />
+<assign value='"VALI"' property='target.{PID:IdentityReliabilityCode(1)}' action='set' />
+<assign value='context.NSS' property='target.{PID:SSNNumberPatient}' action='set' />
+</transform>
+]]></Data>
+</XData>
+
+<Parameter name="IGNOREMISSINGSOURCE">
+<Default>1</Default>
+</Parameter>
+
+<Parameter name="REPORTERRORS">
+<Default>1</Default>
+</Parameter>
+
+<Parameter name="TREATEMPTYREPEATINGFIELDASNULL">
+<Default>0</Default>
+</Parameter>
+</Class>
+
+
+<Class name="SQT.HL7.Clinicom.ADT.IDO.BPLTest">
+<Description>
+</Description>
+<Super>Ens.BusinessProcessBPL</Super>
+<TimeChanged>65296,50613.554131</TimeChanged>
+<TimeCreated>65233,38113.289076</TimeCreated>
+
+<Storage name="Default">
+<Type>%Storage.Persistent</Type>
+</Storage>
+
+<XData name="BPL">
+<Description>
+BPL Definition</Description>
+<XMLNamespace>http://www.intersystems.com/bpl</XMLNamespace>
+<Data><![CDATA[
+<process language='objectscript' request='EnsLib.HL7.Message' response='EnsLib.HL7.Message' height='3300' width='2000' >
+<context>
+<property name='TransformedRequest' type='EnsLib.HL7.Message' instantiate='0' />
+<property name='SegmentZMI' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='50' />
+</parameters>
+</property>
+<property name='MessageACK' type='EnsLib.HL7.Message' instantiate='0' />
+<property name='Message2' type='EnsLib.HL7.Message' instantiate='0' />
+<property name='Messagefinal' type='EnsLib.HL7.Message' instantiate='0' />
+<property name='IPP1' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='50' />
+</parameters>
+</property>
+<property name='Nom' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='50' />
+</parameters>
+</property>
+<property name='dates' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='50' />
+</parameters>
+</property>
+<property name='RawCount' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='' />
+</parameters>
+</property>
+<property name='erreur' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='' />
+</parameters>
+</property>
+<property name='IPPLocal' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='50' />
+</parameters>
+</property>
+<property name='IDDAC' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='50' />
+</parameters>
+</property>
+<property name='OIDLOCAL' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='50' />
+</parameters>
+</property>
+<property name='OIDDAC' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='50' />
+</parameters>
+</property>
+<property name='requestNSS' type='EnsLib.HL7.Message' instantiate='0' />
+<property name='IPPnss' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='50' />
+</parameters>
+</property>
+<property name='NOMnss' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='50' />
+</parameters>
+</property>
+<property name='PRENOMnss' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='50' />
+</parameters>
+</property>
+<property name='DATENnss' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='50' />
+</parameters>
+</property>
+<property name='NSS' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='50' />
+</parameters>
+</property>
+<property name='NSS2' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='50' />
+</parameters>
+</property>
+<property name='IPPPatient' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='50' />
+</parameters>
+</property>
+<property name='Etablissement' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='50' />
+</parameters>
+</property>
+<property name='NomPatient' type='%String' instantiate='0' >
+<parameters>
+<parameter name='MAXLEN'  value='250' />
+</parameters>
+</property>
+</context>
+<sequence xend='200' yend='2300' >
+<code xpos='200' ypos='250' >
+<![CDATA[ Set ^MPIIDC = ""
+  set context.erreur = ""
+  
+   set context.NSS = request.GetValueAt("PID:SSNNumberPatient")
+   $$$LOGINFO("context 1er: ")
+   $$$LOGINFO(context.NSS)]]]]><![CDATA[>
+</code>
+<if name='ADT_A31' condition='request.Name = "ADT_A31"' xpos='200' ypos='350' xend='200' yend='1250' >
+<true>
+<code xpos='470' ypos='500' >
+<![CDATA[  set context.IPPnss =  request.GetValueAt("PID:PatientIdentifierList(1).IDNumber")
+  
+    set context.NOMnss =  request.GetValueAt("PID:PatientName(1).FamilyName")
+    
+    
+      set context.DATENnss =  request.GetValueAt("PID:DateTimeofBirth")
+  
+  set context.NSS2 = request.GetValueAt("PID:SSNNumberPatient")
+  set context.NSS = ""
+  
+  $$$LOGINFO("context : ")
+   $$$LOGINFO(context.NSS2)
+  $$$LOGINFO(context.IPPnss)
+  $$$LOGINFO(context.NOMnss)
+  $$$LOGINFO(context.DATENnss)
+  ]]]]><![CDATA[>
+</code>
+<sql xpos='470' ypos='600' >
+<annotation><![CDATA[select 
+NSS into :context.NSS
+from Dac_NSS.table1
+where 
+IPP = :context.IPPnss 
+and
+NOM = :context.NOMnss
+and
+DATEN = :context.DATENnss
+and
+NSS != '']]]]><![CDATA[></annotation>
+<![CDATA[select 
+NSS into :context.NSS
+from Dac_NSS.table1
+where 
+IPP = :context.IPPnss 
+and
+NOM = :context.NOMnss
+and
+DATEN = :context.DATENnss
+and
+Etablissement = 'CLINICOM'
+and
+NSS IS NOT NULL
+]]]]><![CDATA[>
+</sql>
+<if condition='context.NSS2 = ""' xpos='470' ypos='700' xend='470' yend='950' >
+<true>
+<code name='NSS from Table' xpos='740' ypos='850' >
+<![CDATA[ $$$LOGINFO("NSS from adt message is null, NSS from table should be taken!")
+ $$$LOGINFO(context.NSS)]]]]><![CDATA[>
+</code>
+</true>
+<false>
+<code name='NSS from Msg ADT31' xpos='470' ypos='850' >
+<![CDATA[ $$$LOGINFO("NSS in adt message is not null and is equal to : ")
+ set context.NSS = context.NSS2
+  $$$LOGINFO(context.NSS)
+  $$$LOGINFO("We proceed to the message transformation")]]]]><![CDATA[>
+</code>
+</false>
+</if>
+<transform name='Premiere transformation' class='SQT.HL7.Clinicom.ADT.DAC' source='request' target='context.TransformedRequest' xpos='470' ypos='1050' >
+<annotation><![CDATA[transformation du message Pastel(ADT) avant de l'envoyer vers DAC]]]]><![CDATA[></annotation>
+</transform>
+<code xpos='470' ypos='1150' >
+<![CDATA[  set context.NSS = ""
+  $$$LOGINFO("ddddd : ")]]]]><![CDATA[>
+</code>
+</true>
+<false>
+<transform name='Transformation du message ' class='SQT.HL7.Clinicom.ADT.DAC' source='request' target='context.TransformedRequest' xpos='200' ypos='500' >
+<annotation><![CDATA[transformation du message Pastel(ADT) avant de l'envoyer vers DAC]]]]><![CDATA[></annotation>
+</transform>
+</false>
+</if>
+<call name='Envoie vers DAC' target='CCOM.DAC.TCP' async='0' xpos='200' ypos='1350' >
+<request type='EnsLib.HL7.Message' >
+<assign property="callrequest" value="context.TransformedRequest" action="set" />
+</request>
+<response type='EnsLib.HL7.Message' >
+<assign property="context.MessageACK" value="callresponse" action="set" />
+</response>
+</call>
+<sync name='synochro' calls='Envoie vers DAC' timeout='PT1S' type='all' xpos='200' ypos='1450' />
+<code xpos='200' ypos='1550' >
+<![CDATA[ $$$LOGINFO("Attente du ACK...")]]]]><![CDATA[>
+</code>
+<transform name='ack1' class='SQT.HL7.Pastel.ADT.IDO.TransformationBPlACK' source='context.MessageACK' target='context.Message2' xpos='200' ypos='1650' />
+<code name='Récupération du MPIID' xpos='200' ypos='1750' >
+<![CDATA[
+       Set ^MPIIDC = context.Message2.GetValueAt("ZIM:ZIMid.MPIID")
+       $$$LOGINFO("Récupération du MPIID envoyé par le DAC")
+    $$$LOGINFO(^MPIIDC)
+   
+  ]]]]><![CDATA[>
+</code>
+<if name='if MPPPID est vide' condition='^MPIIDC = ""' xpos='200' ypos='1850' xend='200' yend='2200' >
+<true>
+<code name='get data : No MPIID' xpos='470' ypos='2000' >
+<![CDATA[ $$$LOGINFO("DAC does not return a patient MPIID")
+ 
+ set context.IPP1= request.GetValueAt("PID:PatientIdentifierList(1).IDNumber")
+ 
+  set context.Nom= request.GetValueAt("PID:PatientName(1).FamilyName")
+
+   set context.dates= request.GetValueAt("MSH:DateTimeofMessage")
+   
+   set context.RawCount = request.RawContent
+   
+   set context.erreur = context.Message2.GetValueAt("ERR(1):DiagnosticInformation")
+   
+   $$$LOGINFO("erreur : ")
+   $$$LOGINFO(context.erreur)
+ 
+  $$$LOGINFO(context.IPP1)
+ ]]]]><![CDATA[>
+</code>
+<sql name='Insert into Pastel_OID.TabledesRejet' xpos='470' ypos='2100' >
+<![CDATA[ INSERT INTO Pastel_OID.TabledesRejet
+(IPP, Nom, Dates, RawCount,Diagnostic)
+VALUES
+(:context.IPP1,:context.Nom,:context.dates, :context.RawCount, :context.erreur)]]]]><![CDATA[>
+</sql>
+</true>
+<false>
+<code name='get data : with MPIID' xpos='200' ypos='2000' >
+<![CDATA[ $$$LOGINFO("DAC return a patient MPIID")
+ set context.IPPPatient= request.GetValueAt("PID:PatientIdentifierList(1).IDNumber")
+ $$$LOGINFO("1_"_context.IPPPatient)
+ set context.NomPatient= request.GetValueAt("PID:PatientName(1).FamilyName")
+ $$$LOGINFO("2_"_context.NomPatient)
+   
+ set context.Etablissement= request.GetValueAt("MSH:SendingFacility(1).NamespaceID")
+ $$$LOGINFO("3_"_context.Etablissement)
+              
+ set MPIID1 = ^MPIIDC 
+   set context.RawCount = request.RawContent
+
+ ]]]]><![CDATA[>
+</code>
+<sql name='insert into Table_Dac.MPIID' xpos='200' ypos='2100' >
+<![CDATA[ INSERT INTO Table_Dac.MPIID
+(IPP, Nom, Etablissement, MPIID, RawCount)
+VALUES
+(:context.IPPPatient, :context.NomPatient, :context.Etablissement,:MPIID1, :context.RawCount)]]]]><![CDATA[>
+</sql>
+</false>
+</if>
+</sequence>
+</process>
+]]></Data>
+</XData>
+</Class>
+
+
+<Class name="SQT.HL7.DAC.NSS">
+<Super>Ens.DataTransformDTL</Super>
+<TimeChanged>65296,52248.964296</TimeChanged>
+<TimeCreated>65199,41533.583807</TimeCreated>
+<DependsOn>EnsLib.HL7.Message</DependsOn>
+
+<Parameter name="IGNOREMISSINGSOURCE">
+<Default>1</Default>
+</Parameter>
+
+<Parameter name="REPORTERRORS">
+<Default>1</Default>
+</Parameter>
+
+<Parameter name="TREATEMPTYREPEATINGFIELDASNULL">
+<Default>0</Default>
+</Parameter>
+
+<XData name="DTL">
+<XMLNamespace>http://www.intersystems.com/dtl</XMLNamespace>
+<Data><![CDATA[
+<transform sourceClass='EnsLib.HL7.Message' targetClass='EnsLib.HL7.Message' sourceDocType='CustomNewPastel:ADT_A01' targetDocType='CustomNewPastel:ADT_A01' create='new' language='objectscript' >
+<assign value='source' property='target' action='set' />
+<assign value='source.{PID:PatientIdentifierList(1).IDNumber}' property='IPP' action='set' />
+<assign value='source.{PID:PatientName(1).FamilyName}' property='NOM' action='set' />
+<assign value='source.{PID:PatientName(1).GivenName}' property='PRENOM' action='set' />
+<assign value='source.{PID:PatientName(1).Prefix}' property='SEXE' action='set' />
+<assign value='source.{PID:DateTimeofBirth}' property='DATEN' action='set' />
+<if condition='source.{PID:SSNNumberPatient} = ""' >
+<true>
+<assign value='""' property='NSS' action='set' />
+</true>
+<false>
+<assign value='source.{PID:SSNNumberPatient}' property='NSS' action='set' />
+</false>
+</if>
+<assign value='"CLINICOM"' property='Etablissement' action='set' />
+<sql>
+<![CDATA[ INSERT INTO Dac_NSS.table1
+(IPP, NOM, PRENOM, SEXE, DATEN, NSS,Etablissement)
+VALUES
+(:IPP, :NOM, :PRENOM, :SEXE, :DATEN, :NSS, :Etablissement)]]]]><![CDATA[></sql>
+</transform>
+]]></Data>
+</XData>
+</Class>
+
+
+<Class name="SQT.HL7.Pastel.ADT.IDO.TransformationBPlACK">
+<Super>Ens.DataTransformDTL</Super>
+<TimeChanged>65233,53427.676072</TimeChanged>
+<TimeCreated>65097,53934.381226</TimeCreated>
+<DependsOn>EnsLib.HL7.Message</DependsOn>
+
+<Parameter name="IGNOREMISSINGSOURCE">
+<Default>1</Default>
+</Parameter>
+
+<Parameter name="REPORTERRORS">
+<Default>0</Default>
+</Parameter>
+
+<Parameter name="TREATEMPTYREPEATINGFIELDASNULL">
+<Default>0</Default>
+</Parameter>
+
+<XData name="DTL">
+<XMLNamespace>http://www.intersystems.com/dtl</XMLNamespace>
+<Data><![CDATA[
+<transform sourceClass='EnsLib.HL7.Message' targetClass='EnsLib.HL7.Message' sourceDocType='2.6:ACK' targetDocType='CustomNewPastel:ACK_A28_ACK' create='copy' language='objectscript' >
+</transform>
+]]></Data>
+</XData>
+</Class>
+
+
+<Document name="CustomNewPastel.HL7">
+<Category name="CustomNewPastel" base="Custom2.6">
+
+<MessageType name='ACK_MPIID' structure='ACK_A28_ACK'/>
+<MessageType name='AD01_ACK_Pastel' structure='ACK'/>
+<MessageType name='ADT_A01' structure='ADT_A01' returntype='ACK_MPIID'/>
+<MessageType name='ADT_A02' structure='ADT_A01' returntype='2.6:ACK_A02'/>
+<MessageType name='ADT_A04' structure='ADT_A01' returntype='2.6:ACK_A04'/>
+<MessageType name='ADT_A24' structure='ADT_A02' returntype='ACK_MPIID'/>
+<MessageType name='ADT_A28' structure='ADT_A01' returntype='ACK_MPIID'/>
+<MessageType name='ADT_A40' structure='ADT_A05' returntype='ADT_A40'/>
+
+<MessageStructure name='ACK' definition='2.6:MSH~[~{~2.6:SFT~}~]~[~2.6:UAC~]~2.6:MSA~[~ZIM~]~[~{~2.6:ERR~}~]'/>
+<MessageStructure name='ACK_A28_ACK' definition='2.6:MSH~[~{~2.6:SFT~}~]~[~2.6:UAC~]~2.6:MSA~[~ZIM~]~[~{~2.6:ERR~}~]'/>
+<MessageStructure name='ADT_A01' definition='2.6:MSH~[~{~2.6:SFT~}~]~[~2.6:UAC~]~2.6:EVN~2.6:PID~[~2.6:PD1~]~[~{~2.6:ARV~}~]~[~{~2.6:ROL~}~]~[~{~2.6:NK1~}~]~2.6:PV1~[~2.6:PV2~]~[~ZBE~]~[~ZFV~]~[~ZFU~]~[~{~2.6:ARV~}~]~[~{~2.6:ROL~}~]~[~{~2.6:DB1~}~]~[~{~2.6:OBX~}~]~[~{~2.6:AL1~}~]~[~{~2.6:DG1~}~]~[~2.6:DRG~]~[~{~2.6:PR1~[~{~2.6:ROL~}~]~}~]~[~{~2.6:GT1~}~]~[~{~2.6:IN1~[~2.6:IN2~]~[~{~2.6:IN3~}~]~[~{~2.6:ROL~}~]~}~]~[~2.6:ACC~]~[~2.6:UB1~]~[~2.6:UB2~]~[~2.6:PDA~]~[~MRG~]'/>
+<MessageStructure name='ADT_A02' definition='2.6:MSH~[~{~2.6:SFT~}~]~[~2.6:UAC~]~2.6:EVN~{~2.6:PID~}~[~2.6:PD1~]~[~{~2.6:ARV~}~]~[~{~2.6:ROL~}~]~[~{~2.6:NK1~}~]~2.6:PV1~[~2.6:PV2~]~[~ZBE~]~[~ZFV~]~[~ZFU~]~[~{~2.6:ARV~}~]~[~{~2.6:ROL~}~]~[~{~2.6:DB1~}~]~[~{~2.6:OBX~}~]~[~{~2.6:AL1~}~]~[~{~2.6:DG1~}~]~[~2.6:DRG~]~[~{~2.6:PR1~[~{~2.6:ROL~}~]~}~]~[~{~2.6:GT1~}~]~[~{~2.6:IN1~[~2.6:IN2~]~[~{~2.6:IN3~}~]~[~{~2.6:ROL~}~]~}~]~[~2.6:ACC~]~[~2.6:UB1~]~[~2.6:UB2~]~[~2.6:PDA~]~[~MRG~]'/>
+<MessageStructure name='ADT_A05' definition='2.6:MSH~[~{~2.6:SFT~}~]~[~2.6:UAC~]~2.6:EVN~2.6:PID~[~2.6:PD1~]~[~{~2.6:ARV~}~]~[~{~2.6:ROL~}~]~[~{~2.6:NK1~}~]~[~2.6:PV1~]~[~2.6:PV2~]~[~MRG~]~[~ZFU~]~[~{~2.6:ARV~}~]~[~{~2.6:ROL~}~]~[~{~2.6:DB1~}~]~[~{~2.6:OBX~}~]~[~{~2.6:AL1~}~]~[~{~2.6:DG1~}~]~[~2.6:DRG~]~[~{~2.6:PR1~[~{~2.6:ROL~}~]~}~]~[~{~2.6:GT1~}~]~[~{~2.6:IN1~[~2.6:IN2~]~[~{~2.6:IN3~}~]~[~{~2.6:ROL~}~]~}~]~[~2.6:ACC~]~[~2.6:UB1~]~[~2.6:UB2~]~[~2.6:PDA~]'/>
+
+<SegmentStructure name='MRG'>
+    <SegmentSubStructure piece='1' description='Movement-ID ' altdesc='ZBE-1 Movement-ID (EI) Definition: Contains one or more identifiers of the movement. This is a repeating field. If a system refers to a movement-ID assigned by another system, then the movement-ID of that system has to be contained in the message. The Movement Identifier list is created with the action INSERT, and then recalled with further actions such as UPDATE or CANCEL.' datatype='MRGdata' max_length='0' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='2' description='Start Movement Date/Time' altdesc='ZBE-2 Start Movement Date/Time (TS) Definition: The date/time the movement occurred, i.e. the effective date time of the event that used action INSERT with this Movement.' max_length='0' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='3' description='End Movement Date/Time' altdesc='ZBE-3 End Movement Date/Time (TS)' max_length='0' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='4' description='Movement Action Code' altdesc='ZBE-4 Movement Action Code (ID) Definition: The way in which this movement related transaction should be dealt with by the receiving application (INSERT - With any trigger event that inserts a movement, UPDATE - With trigger event Z99, CANCEL - With any “cancel” trigger event).' max_length='0' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='5' description='Historical Movement Indicator ' altdesc='ZBE-5 Historical Movement Indicator (ID) Definition: Contains ‘Y’ when the message is related to a Historic Movement, contains ‘N’ when the message is related to the current (last or next) movement.' max_length='0' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='6' description='Original trigger Event Code' altdesc='ZBE-6 Original trigger Event Code (ID) Definition: This field shall be populated when ZBE-4 contains action UPDATE or CANCEL. In this case, this field is populated with the trigger event that inserted (action INSERT) the movement being currently updated or canceled.' max_length='0' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='7' description='Responsible Ward ' altdesc='ZBE-7 Responsible Ward (CE) This field may be further constrained in national extensions of this profile. It will, for example, be associated with usage ‘RE’ in the French extension of the IHE Profile.' datatype='MRG7Sub' symbol='*' max_length='0' required='O' ifrepeating='1'/>
+    <SegmentSubStructure piece='8' description='champ8' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='9' description='champ9' required='O' ifrepeating='0'/>
+</SegmentStructure>
+<SegmentStructure name='ZBE'>
+    <SegmentSubStructure piece='1' description='Movement-ID ' altdesc='ZBE-1 Movement-ID (EI) Definition: Contains one or more identifiers of the movement. This is a repeating field. If a system refers to a movement-ID assigned by another system, then the movement-ID of that system has to be contained in the message. The Movement Identifier list is created with the action INSERT, and then recalled with further actions such as UPDATE or CANCEL.' datatype='base:ZBEdata' max_length='0' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='2' description='Start Movement Date/Time' altdesc='ZBE-2 Start Movement Date/Time (TS) Definition: The date/time the movement occurred, i.e. the effective date time of the event that used action INSERT with this Movement.' max_length='0' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='3' description='End Movement Date/Time' altdesc='ZBE-3 End Movement Date/Time (TS)' max_length='0' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='4' description='Movement Action Code' altdesc='ZBE-4 Movement Action Code (ID) Definition: The way in which this movement related transaction should be dealt with by the receiving application (INSERT - With any trigger event that inserts a movement, UPDATE - With trigger event Z99, CANCEL - With any “cancel” trigger event).' max_length='0' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='5' description='Historical Movement Indicator ' altdesc='ZBE-5 Historical Movement Indicator (ID) Definition: Contains ‘Y’ when the message is related to a Historic Movement, contains ‘N’ when the message is related to the current (last or next) movement.' max_length='0' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='6' description='Original trigger Event Code' altdesc='ZBE-6 Original trigger Event Code (ID) Definition: This field shall be populated when ZBE-4 contains action UPDATE or CANCEL. In this case, this field is populated with the trigger event that inserted (action INSERT) the movement being currently updated or canceled.' max_length='0' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='7' description='Responsible Ward ' altdesc='ZBE-7 Responsible Ward (CE) This field may be further constrained in national extensions of this profile. It will, for example, be associated with usage ‘RE’ in the French extension of the IHE Profile.' datatype='ZBEData2' max_length='0' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='8' description='Champ 8' datatype='ZBEData2' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='9' description='Champ 9' required='O' ifrepeating='0'/>
+</SegmentStructure>
+<SegmentStructure name='ZFU'>
+    <SegmentSubStructure piece='1' description='SerialNumber' max_length='0' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='2' description='Champs 2' max_length='0' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='3' description='Champs 3' max_length='0' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='4' description='Champs 4' max_length='0' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='5' description='Champs 5' max_length='0' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='6' description='Champs 6' max_length='0' required='O' ifrepeating='0'/>
+</SegmentStructure>
+<SegmentStructure name='ZFV'>
+    <SegmentSubStructure piece='1' description='Champ 1' altdesc='ZBE-1 Movement-ID (EI) Definition: Contains one or more identifiers of the movement. This is a repeating field. If a system refers to a movement-ID assigned by another system, then the movement-ID of that system has to be contained in the message. The Movement Identifier list is created with the action INSERT, and then recalled with further actions such as UPDATE or CANCEL.' datatype='base:ZBEdata' max_length='0' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='2' description='Champ 2' altdesc='ZBE-2 Start Movement Date/Time (TS) Definition: The date/time the movement occurred, i.e. the effective date time of the event that used action INSERT with this Movement.' max_length='0' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='3' description='Champ 3' altdesc='ZBE-3 End Movement Date/Time (TS)' max_length='0' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='4' description='Champ 4' altdesc='ZBE-4 Movement Action Code (ID) Definition: The way in which this movement related transaction should be dealt with by the receiving application (INSERT - With any trigger event that inserts a movement, UPDATE - With trigger event Z99, CANCEL - With any “cancel” trigger event).' max_length='0' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='5' description='Champ 5' altdesc='ZBE-5 Historical Movement Indicator (ID) Definition: Contains ‘Y’ when the message is related to a Historic Movement, contains ‘N’ when the message is related to the current (last or next) movement.' max_length='0' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='6' description='Champ 6' altdesc='ZBE-6 Original trigger Event Code (ID) Definition: This field shall be populated when ZBE-4 contains action UPDATE or CANCEL. In this case, this field is populated with the trigger event that inserted (action INSERT) the movement being currently updated or canceled.' max_length='0' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='7' description='Champ 7' altdesc='ZBE-7 Responsible Ward (CE) This field may be further constrained in national extensions of this profile. It will, for example, be associated with usage ‘RE’ in the French extension of the IHE Profile.' datatype='base:ZBEdata' max_length='0' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='8' description='Champ 8' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='9' description='Champ 9' datatype='base:ZBEdata' required='O' ifrepeating='0'/>
+</SegmentStructure>
+<SegmentStructure name='ZIM'>
+    <SegmentSubStructure piece='1' description='ZIMid' datatype='ZIMsub' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='2' description='SUB2' required='O' ifrepeating='0'/>
+    <SegmentSubStructure piece='3' description='SUB3' required='O' ifrepeating='0'/>
+</SegmentStructure>
+<SegmentStructure name='ZTR'>
+    <SegmentSubStructure piece='1' description='SerialNumber' symbol='*' repeatcount='2' max_length='0' required='O' ifrepeating='1'/>
+</SegmentStructure>
+
+<DataType name='MRG7Sub'>
+    <DataSubType piece='1' description='SUB1' required='O'/>
+    <DataSubType piece='2' description='SUB2' required='O'/>
+    <DataSubType piece='3' description='SUB3' required='O'/>
+    <DataSubType piece='4' description='SUB4' required='O'/>
+    <DataSubType piece='5' description='SUB5' required='O'/>
+    <DataSubType piece='6' description='SUB6' required='O'/>
+    <DataSubType piece='7' description='SUB7' required='O'/>
+    <DataSubType piece='8' description='SUB8' required='O'/>
+    <DataSubType piece='9' description='SUB9' required='O'/>
+</DataType>
+<DataType name='MRGSubData'>
+    <DataSubType piece='1' description='SubSub1' required='O'/>
+    <DataSubType piece='2' description='SubSub2' required='O'/>
+    <DataSubType piece='3' description='SubSub3' required='O'/>
+    <DataSubType piece='4' description='SubSub4' required='O'/>
+    <DataSubType piece='5' description='SubSub5' required='O'/>
+    <DataSubType piece='6' description='SubSub6' required='O'/>
+</DataType>
+<DataType name='MRGdata'>
+    <DataSubType piece='1' description='SUB1' required='O'/>
+    <DataSubType piece='2' description='SUB2' required='O'/>
+    <DataSubType piece='3' description='SUB3' required='O'/>
+    <DataSubType piece='4' description='SUB4' datatype='MRGSubData' required='O'/>
+    <DataSubType piece='5' description='SUB5' required='O'/>
+    <DataSubType piece='6' description='SUB6' datatype='MRGSubData' required='O'/>
+    <DataSubType piece='7' description='SUB7' required='O'/>
+</DataType>
+<DataType name='ZBEData2'>
+    <DataSubType piece='1' description='SUB1' required='O'/>
+    <DataSubType piece='2' description='SUB2' required='O'/>
+    <DataSubType piece='3' description='SUB3' required='O'/>
+    <DataSubType piece='4' description='SUB4' required='O'/>
+    <DataSubType piece='5' description='SUB5' required='O'/>
+    <DataSubType piece='6' description='SUB6' datatype='ZBESub2' required='O'/>
+    <DataSubType piece='7' description='SUB7' required='O'/>
+    <DataSubType piece='8' description='SUB8' required='O'/>
+    <DataSubType piece='9' description='SUB9' required='O'/>
+    <DataSubType piece='10' description='SUB10' required='O'/>
+</DataType>
+<DataType name='ZBESub2'>
+    <DataSubType piece='1' description='SUB1' required='O'/>
+    <DataSubType piece='2' description='SUB2' required='O'/>
+    <DataSubType piece='3' description='SUB3' required='O'/>
+    <DataSubType piece='4' description='SUB4' required='O'/>
+    <DataSubType piece='5' description='SUB5' required='O'/>
+    <DataSubType piece='6' description='SUB6' required='O'/>
+    <DataSubType piece='7' description='SUB7' required='O'/>
+</DataType>
+<DataType name='ZIMsub'>
+    <DataSubType piece='1' description='MPIID' required='O'/>
+    <DataSubType piece='2' description='ZMIsub2' required='O'/>
+    <DataSubType piece='3' description='ZMIsub3' required='O'/>
+    <DataSubType piece='4' description='ZMIsub4' required='O'/>
+</DataType>
+
+</Category>
+</Document>
+
+<Document name="EnsExportNotes.EnsExportItem_2020-09-16 11-05-54_877+0.PTD"><ProjectTextDocument name="EnsExportNotes.EnsExportItem_2020-09-16 11-05-54_877+0" description="Export Notes for export EnsExportItem_2020-09-16 11-05-54_877+0">
+<![CDATA[<Deployment>
+<Creation>
+<Machine>IRISDEV01.BRC35RDCW0WETDHB0F3U3PXPVB.PARX.INTERNAL.CLOUDAPP.NET</Machine>
+<Instance>IRISDEV01</Instance>
+<Namespace>DACETABLISSEMENTFHIR</Namespace>
+<SourceProduction>DACETABLISSEMENTFHIRPKG.FoundationProduction</SourceProduction>
+<Username>sghanmi</Username>
+<UTC>2020-09-16 11:06:39.896</UTC>
+</Creation>
+<Notes>
+</Notes>
+<Contents>
+<ExportProject>EnsExportItem_2020-09-16 11-05-54_877+0</ExportProject>
+<Item num="1">AHP.Functions.utils.CLS</Item>
+<Item num="2">CHSQT.HL7.ADTtr.CLS</Item>
+<Item num="3">CustomNewPastel.HL7</Item>
+<Item num="4">HL7.routeurRoutingRule.CLS</Item>
+<Item num="5">SQT.HL7.Clinicom.ADT.DAC.CLS</Item>
+<Item num="6">SQT.HL7.Clinicom.ADT.IDO.BPLTest.CLS</Item>
+<Item num="7">SQT.HL7.DAC.NSS.CLS</Item>
+<Item num="8">SQT.HL7.Pastel.ADT.IDO.TransformationBPlACK.CLS</Item>
+<Item num="9">Settings:Etablissement.Dac.Output.PTD</Item>
+<Item num="10">Settings:Etablissement.Dac.Test.PTD</Item>
+<Item num="11">Settings:HL7.routeur.PTD</Item>
+<Item num="12">Settings:IDO.BPLtest.PTD</Item>
+<Item num="13">Settings:Orbis.HL7.Admission.PTD</Item>
+</Contents>
+<ProductionClassInExport></ProductionClassInExport>
+</Deployment>
+
+]]></ProjectTextDocument>
+</Document>
+
+<Document name="Settings:Etablissement.Dac.Output.PTD"><ProjectTextDocument name="Settings:Etablissement.Dac.Output" description="Settings for Etablissement.Dac.Output in Production DACETABLISSEMENTFHIRPKG.FoundationProduction">
+<![CDATA[<Item Name="Etablissement.Dac.Output" Category="" ClassName="EnsLib.File.PassthroughOperation" PoolSize="1" Enabled="false" Foreground="false" Comment="" LogTraceEvents="false" Schedule=""><Setting Target="Adapter" Name="FilePath">/home/AdminYDG/testasma/output</Setting><Setting Target="Host" Name="Filename">%Y%m%d_%H%M_%f_ORG.csv</Setting></Item>
+]]></ProjectTextDocument>
+</Document>
+
+<Document name="Settings:Etablissement.Dac.Test.PTD"><ProjectTextDocument name="Settings:Etablissement.Dac.Test" description="Settings for Etablissement.Dac.Test in Production DACETABLISSEMENTFHIRPKG.FoundationProduction">
+<![CDATA[<Item Name="Etablissement.Dac.Test" Category="" ClassName="EnsLib.HL7.Service.FileService" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule=""><Setting Target="Host" Name="MessageSchemaCategory">CustomNewPastel</Setting><Setting Target="Host" Name="TargetConfigNames">HL7.routeur</Setting><Setting Target="Adapter" Name="FilePath">/home/AdminYDG/testasma/input</Setting><Setting Target="Adapter" Name="FileSpec">*.HL7;*.hl7</Setting></Item>
+]]></ProjectTextDocument>
+</Document>
+
+<Document name="Settings:HL7.routeur.PTD"><ProjectTextDocument name="Settings:HL7.routeur" description="Settings for HL7.routeur in Production DACETABLISSEMENTFHIRPKG.FoundationProduction">
+<![CDATA[<Item Name="HL7.routeur" Category="" ClassName="EnsLib.HL7.MsgRouter.RoutingEngine" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule=""><Setting Target="Host" Name="Validation"></Setting><Setting Target="Host" Name="BusinessRuleName">HL7.routeurRoutingRule</Setting></Item>
+]]></ProjectTextDocument>
+</Document>
+
+<Document name="Settings:IDO.BPLtest.PTD"><ProjectTextDocument name="Settings:IDO.BPLtest" description="Settings for IDO.BPLtest in Production DACETABLISSEMENTFHIRPKG.FoundationProduction">
+<![CDATA[<Item Name="IDO.BPLtest" Category="" ClassName="SQT.HL7.Clinicom.ADT.IDO.BPLTest" PoolSize="0" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule=""></Item>
+]]></ProjectTextDocument>
+</Document>
+
+<Document name="Settings:Orbis.HL7.Admission.PTD"><ProjectTextDocument name="Settings:Orbis.HL7.Admission" description="Settings for Orbis.HL7.Admission in Production DACETABLISSEMENTFHIRPKG.FoundationProduction">
+<![CDATA[<Item Name="Orbis.HL7.Admission" Category="" ClassName="EnsLib.HL7.Operation.TCPOperation" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule=""><Setting Target="Adapter" Name="IPAddress">srv-orbisbpe-tst</Setting><Setting Target="Adapter" Name="Port">2505</Setting><Setting Target="Host" Name="ReplyCodeActions">C</Setting></Item>
+]]></ProjectTextDocument>
+</Document></Export>
